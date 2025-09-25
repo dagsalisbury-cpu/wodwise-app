@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    /* Add these three lines */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-header {
+    text-align: center;
+    /* This creates the semi-transparent box */
+    background-color: rgba(30, 30, 30, 0.6); 
+    padding: 30px 30px 1px 30px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    /* This is the key that makes the box shrink to fit the text */
+    display: inline-block; 
+}
+
+/* --- NEW Video Background Styles --- */
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -100; /* Pushes the video far behind everything */
+    object-fit: cover;
+}
+
+/* This adds a dark overlay on top of the video for readability */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -99;
+
+}
+
+.top-band {
+    width: 100%;
+     background-color: rgba(30, 30, 30, 0.95); 
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+.main-layout {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    align-items: flex-start; 
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Add this line to vertically center */
+    flex-basis: 100px;
+    flex-shrink: 0;
+    padding-right: 40px;
+    border-right: 1px solid #bb86fc;
+}
+
+.right-column {
+    display: flex;
+    justify-content: center; /* Horizontally centers the content */
+    align-items: flex-start;  /* Vertically aligns content to the top */
+
+}
+
+.left-column .container { text-align: center; }
+.input-columns-wrapper { display: flex; gap: 30px; }
+.input-sub-column { flex: 1; }
+
+h1 { color: #ffffff; font-weight: 700; letter-spacing: 3px; margin-bottom: 8px; }
+h1 span { color: #bb86fc; }
+p { color: #b3b3b3; font-weight: 500; margin-bottom: 20px; }
+h3 { color: #e0e0e0; margin: 0; padding: 10px; border: none; }
+h4 {
+    text-align: left;
+    color: #bb86fc;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+    font-weight: 400;
+}
+.results-band h4 {
+    color: #e0e0e0;
+    font-size: 1.5em;
+    border-bottom: none;
+}
+
+.controls { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; }
+.input-group { display: flex; align-items: center; gap: 5px; }
+select, input[type="number"] { background-color: #333; color: #e0e0e0; border: 1px solid #555; border-radius: 6px; padding: 10px; font-size: 13px; }
+input[type="number"] { width: 45px; }
+.wod-label { flex-basis: 90px; text-align: left; font-size: 13px; }
+
+button { background-color: #bb86fc; color: #121212; border: none; border-radius: 6px; padding: 12px 25px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background-color 0.3s ease, transform 0.1s ease; margin-top: 20px; }
+button:hover { background-color: #a362ff; }
+button:active { transform: scale(0.98); }
+
+.results-band {
+    width: 100%;
+    max-width: 1600px;
+    margin: 40px auto 0 auto;
+}
+
+.category-row {
+    margin-bottom: 20px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 25px;
+    border-left: 5px solid transparent;
+}
+.category-row.benchmarks { border-left-color: #f58231; }
+.category-row.strength { border-left-color: #3cb44b; }
+.category-row.running { border-left-color: #4363d8; }
+
+#bg-video {
+    position: fixed; /* Fixes the video relative to the browser window */
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -100; /* Pushes the video behind all other content */
+    object-fit: cover; /* Ensures the video covers the screen without distortion */
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); /* An 20% transparent black */
+    z-index: -99; /* Sits between the video and your content */
+}
+
+/* CHANGE 2: Standardize to a 3-column grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+#radar-chart-container { 
+    background-color: rgba(30, 30, 30, 0.85);
+    border-radius: 12px; 
+    padding: 10px 10px 10px 30px; 
+    display: flex;
+    justify-content: center; /* Horizontally centers the content */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    width: 500px;
+    height: 420px
+}
+.hidden { display: none; }
+
+#logo {
+    height: 60px; /* You can adjust this value to make the logo bigger or smaller */
+    width: auto;
+}
+
+/* Add a subtle border to all main containers */
+.container, #radar-chart-container, .result-wrapper {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Add a highlight effect when an input is selected */
+select:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: #bb86fc;
+    box-shadow: 0 0 10px rgba(187, 134, 252, 0.3);
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px; /* Pushes it down from the content above */
+    border-top: 1px solid #333; /* A subtle dividing line */
+    color: #888; /* A less prominent color */
+    font-size: 14px;
+}

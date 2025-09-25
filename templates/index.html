@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WODWISE</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <video autoplay loop muted playsinline id="bg-video">
+    <source src="/static/CrossFit_Open_Home_Gym_Video_Concept.mp4" type="video/mp4">
+</video>
+
+<header class="page-header">
+    <img src="/static/logo3.png" alt="WODWISE Logo" id="logo">
+    <h1>WOD<span>WISE</span></h1>
+    <p>Analyze your benchmark performance against thousands of athletes.</p>
+    
+</header>
+
+    <div class="top-band">
+        <div class="main-layout">
+            <div class="column left-column">
+                <div class="container">
+                    <div class="input-columns-wrapper">
+                        <div class="input-sub-column">
+                            <h4>Benchmarks</h4>
+                            {% for key, wod in wod_config.items() %}
+                                {% if wod.category == 'Benchmarks' %}
+                                    <div class="controls" id="controls-{{ key }}">
+                                        <label class="wod-label">{{ wod.name }}</label>
+                                        <div class="input-group" data-wod-type="{{ wod.type }}">
+                                            <div class="time-input"><input type="number" class="minutes-input" placeholder="Min"><span>:</span><input type="number" class="seconds-input" placeholder="Sec"></div>
+                                            <div class="score-input"><input type="number" class="single-score-input" placeholder="{{ wod.unit }}"></div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="input-sub-column">
+                            <h4>Strength</h4>
+                            {% for key, wod in wod_config.items() %}
+                                {% if wod.category == 'Strength' %}
+                                    <div class="controls" id="controls-{{ key }}">
+                                        <label class="wod-label">{{ wod.name }}</label>
+                                        <div class="input-group" data-wod-type="{{ wod.type }}">
+                                            <div class="score-input"><input type="number" class="single-score-input" placeholder="{{ wod.unit }}"></div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <h4>Running</h4>
+                             {% for key, wod in wod_config.items() %}
+                                {% if wod.category == 'Running' %}
+                                    <div class="controls" id="controls-{{ key }}">
+                                        <label class="wod-label">{{ wod.name }}</label>
+                                        <div class="input-group" data-wod-type="{{ wod.type }}">
+                                            <div class="time-input"><input type="number" class="minutes-input" placeholder="Min"><span>:</span><input type="number" class="seconds-input" placeholder="Sec"></div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <button id="get-percentile-btn">Analyze</button>
+            </div>
+            <div class="column right-column">
+                <div id="radar-chart-container">
+                    <canvas id="summaryRadarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div id="results-container" class="results-band">
+        <div id="results-Benchmarks" class="category-row benchmarks hidden">
+            <h4>Benchmarks</h4>
+            <div class="results-grid"></div>
+        </div>
+        <div id="results-Strength" class="category-row strength hidden">
+            <h4>Strength</h4>
+            <div class="results-grid"></div>
+        </div>
+        <div id="results-Running" class="category-row running hidden">
+            <h4>Running</h4>
+            <div class="results-grid"></div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>const WOD_CONFIG = {{ wod_config | tojson }};</script>
+    <script src="/static/script.js"></script>
+  
+    <footer>
+        <p>&copy; 2025 WODWISE. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

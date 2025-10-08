@@ -19,16 +19,13 @@ WOD_CONFIG = {
     'backsq': {'name': 'Back Squat', 'type': 'weight', 'unit': 'lbs', 'min': 120, 'max': 550, 'category': 'Strength'},
 }
 
-def load_and_clean_data(wod_name, config):
-    try:
-        df = pd.read_csv('crossfit_data.csv')
-        raw_scores = pd.to_numeric(df[wod_name], errors='coerce').dropna()
-        min_val, max_val = config.get('min'), config.get('max')
-        return raw_scores[(raw_scores >= min_val) & (raw_scores <= max_val)]
-    except (FileNotFoundError, KeyError):
-        return pd.Series(dtype=float)
-
-all_wod_data = {wod: load_and_clean_data(wod, cfg) for wod, cfg in WOD_CONFIG.items()}
+# This block correctly creates the main_df variable
+try:
+    main_df = pd.read_csv('crossfit_data.csv')
+    print("✅ crossfit_data.csv loaded successfully.")
+except FileNotFoundError:
+    main_df = None
+    print("❌ Error: crossfit_data.csv not found.")
 
 def format_value(value, wod_type):
     if wod_type == 'time':
@@ -43,15 +40,34 @@ def home():
 
 @app.route("/api/wod/<string:wod_name>/percentile", methods=['POST'])
 def wod_percentile(wod_name):
+    # This function now correctly uses the main_df variable
+    if main_df is None:
+        return jsonify({"error": "Dataset not loaded on server."}), 500
     if wod_name not in WOD_CONFIG:
         return jsonify({"error": "Workout not found."}), 404
-    config = WOD_CONFIG[wod_name]
-    scores = all_wod_data[wod_name]
-    if scores.empty:
-        return jsonify({"error": f"No valid data for '{config['name']}'."}), 500
-    user_score = float(request.get_json().get('score', 0))
+
+    user_data = request.get_json()
+    user_score = float(user_data.get('score', 0))
+    gender = user_data.get('gender', 'everyone')
+
     if user_score <= 0:
         return jsonify({"error": "Invalid score provided."}), 400
+
+    if gender == 'men':
+        filtered_df = main_df[main_df['gender'] == 'Male']
+    elif gender == 'women':
+        filtered_df = main_df[main_df['gender'] == 'Female']
+    else:
+        filtered_df = main_df
+
+    config = WOD_CONFIG[wod_name]
+    
+    scores = pd.to_numeric(filtered_df[wod_name], errors='coerce').dropna()
+    scores = scores[(scores >= config.get('min')) & (scores <= config.get('max'))]
+
+    if scores.empty:
+        return jsonify({"error": f"No valid data for '{config['name']}' with the selected filter."}), 500
+    
     if config['type'] == 'time':
         percentile = 100 - stats.percentileofscore(scores, user_score, kind='strict')
     else:
@@ -61,6 +77,7 @@ def wod_percentile(wod_name):
     counts, bin_edges = np.histogram(scores, bins=bins)
     chart_labels = [f"{format_value(edge, config['type'])} - {format_value(bin_edges[i+1], config['type'])}" for i, edge in enumerate(bin_edges[:-1])]
     chart_data = [int(c) for c in counts]
+
     return jsonify({
         "user_score": user_score,
         "percentile": round(percentile),

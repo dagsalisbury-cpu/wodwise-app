@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsContainer = document.getElementById('results-container');
     const analyzeButton = document.getElementById('get-percentile-btn');
     const radarChartContainer = document.getElementById('radar-chart-container');
+     const genderSelector = document.getElementById('gender-selector');
     
     let barCharts = {};
     let radarChart = null;
@@ -46,40 +47,49 @@ document.addEventListener('DOMContentLoaded', () => {
         createOrUpdateRadarChart(summaryData);
     });
 
-    async function processAnalysis(wodKey, score, summaryData) {
-        const wodConfig = WOD_CONFIG[wodKey];
-        const category = wodConfig.category.replace(' ', '-');
-        const categoryRow = document.getElementById(`results-${category}`);
-        const resultsGrid = categoryRow.querySelector('.results-grid');
-        const resultId = `result-${wodKey}`;
+   async function processAnalysis(wodKey, score, summaryData) {
+    const wodConfig = WOD_CONFIG[wodKey];
+    if (!wodConfig) return;
 
-        try {
-            const response = await fetch(`/api/wod/${wodKey}/percentile`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ score: score }),
-            });
-            const data = await response.json();
-            
-            const resultWrapper = document.createElement('div');
-            resultWrapper.className = 'result-wrapper';
-            resultWrapper.id = resultId;
-            resultWrapper.innerHTML = `<div class="percentile-result-container"></div><div class="chart-container"><canvas class="percentile-chart"></canvas></div>`;
-            resultsGrid.appendChild(resultWrapper);
-            categoryRow.classList.remove('hidden');
-            const resultContainer = resultWrapper.querySelector('.percentile-result-container');
+    // This is the corrected logic to find the right category row
+    const category = wodConfig.category.replace(' ', '-');
+    const categoryRow = document.getElementById(`results-${category}`);
+    const resultsGrid = categoryRow.querySelector('.results-grid');
+    const resultId = `result-${wodKey}`;
 
-            if (data.error) {
-                resultContainer.innerHTML = `<p style="color: #ff7f7f;">Error: ${data.error}</p>`;
-                return;
-            }
-            displayResults(resultContainer, data);
-            createOrUpdateBarChart(resultId, data);
-            summaryData.push({ wodName: data.config.name, percentile: data.percentile });
-        } catch (error) {
-            console.error('Error:', error);
+    const selectedGender = genderSelector.value;
+
+    try {
+        const response = await fetch(`/api/wod/${wodKey}/percentile`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                score: score,
+                gender: selectedGender 
+            }),
+        });
+        const data = await response.json();
+
+        // Create the result wrapper and add it to the correct grid
+        const resultWrapper = document.createElement('div');
+        resultWrapper.className = 'result-wrapper';
+        resultWrapper.id = resultId;
+        resultWrapper.innerHTML = `<div class="percentile-result-container"></div><div class="chart-container"><canvas class="percentile-chart"></canvas></div>`;
+        resultsGrid.appendChild(resultWrapper);
+        categoryRow.classList.remove('hidden'); // Show the category row
+        const resultContainer = resultWrapper.querySelector('.percentile-result-container');
+
+        if (data.error) {
+            resultContainer.innerHTML = `<p style="color: #ff7f7f;">Error for ${wodConfig.name}: ${data.error}</p>`;
+            return;
         }
+        displayResults(resultContainer, data);
+        createOrUpdateBarChart(resultId, data);
+        summaryData.push({ wodName: data.config.name, percentile: data.percentile });
+    } catch (error) {
+        console.error('Error:', error);
     }
+}
 
     function displayResults(container, data) {
         let scoreDisplay;

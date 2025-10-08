@@ -176,8 +176,8 @@ body::before {
     display: flex;
     justify-content: center; /* Horizontally centers the content */
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    width: 500px;
-    height: 420px
+    width: 600px;
+    height: 570px
 }
 .hidden { display: none; }
 
@@ -198,6 +198,20 @@ select:focus, input[type="number"]:focus {
     box-shadow: 0 0 10px rgba(187, 134, 252, 0.3);
 }
 
+.gender-filter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #444;
+}
+.gender-filter label {
+    font-size: 16px;
+    color: #b3b3b3;
+}
+
 footer {
     width: 100%;
     text-align: center;
@@ -206,4 +220,37 @@ footer {
     border-top: 1px solid #333; /* A subtle dividing line */
     color: #888; /* A less prominent color */
     font-size: 14px;
+}
+
+/* --- Mobile Optimizations --- */
+@media (max-width: 992px) { /* These styles apply to screens 992px wide or smaller */
+
+    /* Stack the main two columns vertically */
+    .main-layout {
+        flex-direction: column;
+        align-items: center; /* Center the columns in the viewport */
+    }
+
+    .left-column {
+        border-right: none; /* Remove the vertical divider */
+        padding-right: 0;
+        margin-bottom: 30px; /* Add space between the two stacked columns */
+        width: 100%;
+        flex-basis: auto; /* Allow the column to size naturally */
+    }
+
+    .right-column {
+        padding-left: 0;
+        width: 100%;
+    }
+
+    /* Stack the two sub-columns in the input panel */
+    .input-columns-wrapper {
+        flex-direction: column;
+    }
+
+    /* Make the results grid a single column */
+    #results-container {
+        grid-template-columns: 1fr; /* Each graph takes up the full width */
+    }
 }

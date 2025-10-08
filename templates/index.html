@@ -12,7 +12,7 @@
 </video>
 
 <header class="page-header">
-    <img src="/static/logo3.png" alt="WODWISE Logo" id="logo">
+    <img src="/static/wodwise logo7.png" alt="WODWISE Logo" id="logo">
     <h1>WOD<span>WISE</span></h1>
     <p>Analyze your benchmark performance against thousands of athletes.</p>
     
@@ -22,6 +22,15 @@
         <div class="main-layout">
             <div class="column left-column">
                 <div class="container">
+                    <h2>Enter Your Scores</h2>
+                        <div class="gender-filter">
+                            <label for="gender-selector">Compare my results with:</label>
+                                 <select id="gender-selector">
+                                    <option value="everyone">Everyone</option>
+                                    <option value="men">Men</option>
+                                     <option value="women">Women</option>
+                                </select>
+                                </div>
                     <div class="input-columns-wrapper">
                         <div class="input-sub-column">
                             <h4>Benchmarks</h4>
@@ -39,16 +48,16 @@
                         </div>
                         <div class="input-sub-column">
                             <h4>Strength</h4>
-                            {% for key, wod in wod_config.items() %}
-                                {% if wod.category == 'Strength' %}
-                                    <div class="controls" id="controls-{{ key }}">
-                                        <label class="wod-label">{{ wod.name }}</label>
-                                        <div class="input-group" data-wod-type="{{ wod.type }}">
-                                            <div class="score-input"><input type="number" class="single-score-input" placeholder="{{ wod.unit }}"></div>
+                                {% for key, wod in wod_config.items() %}
+                                    {% if wod.category == 'Strength' or wod.category == 'Olympic Lifting' %}
+                                        <div class="controls" id="controls-{{ key }}">
+                                            <label class="wod-label">{{ wod.name }}</label>
+                                            <div class="input-group" data-wod-type="{{ wod.type }}">
+                                                <div class="score-input"><input type="number" class="single-score-input" placeholder="{{ wod.unit }}"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
                             <h4>Running</h4>
                              {% for key, wod in wod_config.items() %}
                                 {% if wod.category == 'Running' %}

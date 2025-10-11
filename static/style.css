@@ -167,6 +167,11 @@ body::before {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
+    
+}
+
+.result-wrapper .chart-container {
+    height: 300px; /* Default height for desktop */
 }
 
 #radar-chart-container { 
@@ -252,5 +257,18 @@ footer {
     /* Make the results grid a single column */
     #results-container {
         grid-template-columns: 1fr; /* Each graph takes up the full width */
+    }
+
+    #radar-chart-container {
+    padding: 1px; /* Reduce padding on mobile */
+    height: 100vw;  /* Set height relative to the screen's width */
+    max-width: 320px;
+    margin: 0 auto;
+}
+.results-grid {
+        grid-template-columns: 1fr;
+}
+.result-wrapper .chart-container {
+        height: 240px;
     }
 }

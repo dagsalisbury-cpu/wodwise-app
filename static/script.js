@@ -112,7 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById(resultId).querySelector('.percentile-chart');
         const userScore = data.user_score;
         const highlightColor = categoryColors[data.config.category];
-        
+
+    
         const backgroundColors = data.chart_labels.map((label, index) => {
             const [startStr, endStr] = label.split(' - ');
             let startVal, endVal;
@@ -132,13 +133,16 @@ document.addEventListener('DOMContentLoaded', () => {
         barCharts[resultId] = new Chart(canvas, {
             type: 'bar',
             data: { labels: data.chart_labels, datasets: [{ label: 'Number of Athletes', data: data.chart_data, backgroundColor: backgroundColors, borderColor: backgroundColors.map(c => c.replace('0.5', '1').replace('0.8', '1')), borderWidth: 1 }] },
-            options: { scales: { y: { beginAtZero: true, ticks: { color: '#e0e0e0' }, grid: { color: '#444' } }, x: { ticks: { color: '#e0e0e0' }, grid: { color: '#444' } } }, plugins: { legend: { display: false }, title: { display: true, text: `Distribution of '${data.config.name}' Scores`, color: '#ffffff', font: { size: 18 } } } }
+            options: {maintainAspectRatio: false,  scales: { y: { beginAtZero: true, ticks: { color: '#e0e0e0' }, grid: { color: '#444' } }, x: { ticks: { color: '#e0e0e0' }, grid: { color: '#444' } } }, plugins: { legend: { display: false }, title: { display: true, text: `Distribution of '${data.config.name}' Scores`, color: '#ffffff', font: { size: 18 } } } }
         });
     }
     
     function createOrUpdateRadarChart(summaryData) {
         if (!radarChartContainer) return;
         radarChartContainer.classList.remove('hidden');
+        const isMobile = window.innerWidth < 768; // 768px is a common mobile/tablet breakpoint
+        const legendPosition = isMobile ? 'bottom' : 'right';
+        const subtitlePadding = isMobile ? 20 : 5; 
         const canvas = document.getElementById('summaryRadarChart');
         const categoryOrder = ['Olympic Lifting', 'Strength', 'Running', 'Benchmarks'];
         const allWodsSorted = Object.values(WOD_CONFIG).sort((a, b) => {
@@ -203,11 +207,12 @@ const subtitleText = summaryData.length > 0
                 plugins: {
     legend: {
     display: true,
-    position: 'right',
+    position: legendPosition,
     labels: {
         color: '#e0e0e0',
         font: { size: 14 }
     },
+
     // This adds an invisible title that acts as a spacer
     title: {
         display: true,
@@ -225,7 +230,7 @@ const subtitleText = summaryData.length > 0
         color: '#b3b3b3',
         font: { size: 14, style: 'italic' },
         padding: {
-            bottom: 0 // Adds some space between the subtitle and the legend
+            bottom: subtitlePadding // Adds some space between the subtitle and the legend
         }
     }
 }
